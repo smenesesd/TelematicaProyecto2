@@ -1,2 +1,5 @@
 # TelematicaProyecto2
-NADA
+# Integrantes
+# Samuel Meneses Diaz
+# David Gomez Correa
+# Eafit
