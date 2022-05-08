@@ -11,3 +11,7 @@ GET = 'GET'
 POST = 'POST'
 HEAD = 'HEAD'
 DELETE = 'DELETE'
+
+OK200 = "HTTP/1.1 200 OK\n"
+
+Error400 = 'HTTP/1.1 404 Not Found\n\n<html><body>Error 404: File not found</body></html>'

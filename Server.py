@@ -11,6 +11,7 @@ import threading
 
 from numpy import empty
 import constants
+from ServerMet import get
 
 # Defining a socket object...
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)           #AF_INET define el tipo de direccion (ipv4), y modo TCP
@@ -32,22 +33,28 @@ def handler_client_connection(client_connection,client_address):
     while is_connected:
         data_recevived = client_connection.recv(constants.RECV_BUFFER_SIZE)             #Le los datos obetnidos de la peticion
         remote_string = str(data_recevived.decode(constants.ENCONDING_FORMAT))          #Decodfica el mensaje
-        print(remote_string)
         if remote_string == "":
             break
-        remote_command = remote_string.split()
+        print(remote_string)                                                            #Impresion de mensaje de entrada
+        remote_command = remote_string.split()                                          #Division de la peticion entrante
+        #print(remote_command)
         command = remote_command[0]
         print (f'Data received from: {client_address[0]}:{client_address[1]}')
         print(command)
         
-        if (command == constants.HELO):
-            response = '100 OK\n'
-            client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
-        elif (command == constants.QUIT):
+        if (command == constants.GET):
+            print("Entre bro")
+            print(remote_command[1])
+            response = get.get_object(remote_command[1])
+            client_connection.sendall(response)
+        elif (command == constants.POST):
             response = '200 BYE\n'
             client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
             is_connected = False
-        elif (command == constants.DATA):
+        elif (command == constants.HEAD):
+            response = "300 DRCV\n"
+            client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
+        elif (command == constants.DELETE):
             response = "300 DRCV\n"
             client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
         else:
