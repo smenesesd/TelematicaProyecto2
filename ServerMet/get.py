@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).parent.absolute()         #Tomamos el directorio base 
 
 
 def get_tipo(archivo):                              #Seleccion de tipo de archivo para encabezado
-    if archivo.endswith('.jpg'):
+    if archivo.endswith('.jpg') or archivo.endswith('.png')or archivo.endswith('.jpeg'):
         tipo = "image/jpg"
     elif archivo.endswith('.css'):
         tipo = "text/css"
@@ -27,8 +27,8 @@ def get_object(address):                                #Metodo para retornar un
     else:
         direction = direction[1:]                       #En caso de que no sea el index.html
         archivo = str(BASE_DIR / direction)             #Directorio base + la direccion que nos mandan
-        narchivo = re.sub("[\\\]", "/", archivo)        #Se cambia el \ por el /
-        print(narchivo)
+        archivo = re.sub("[\\\]", "/", archivo)        #Se cambia el \ por el /
+        print(archivo)
     try:
         file = open(archivo, 'rb')                                          #Tratamos de leer el archivo
         response = file.read()
@@ -40,7 +40,7 @@ def get_object(address):                                #Metodo para retornar un
         header = constants.Error404
         response = "".encode(constants.ENCONDING_FORMAT)                    #Encabezado para cuando no se encuentra el archivo
     final_response = header.encode(constants.ENCONDING_FORMAT)              #Se codifica el encabezado y la respuesta
-    final_response += response
+    final_response += response 
     return final_response                                                   #Se retorna la respuesta
 
 get_object("/Recursos/imagenes/equipo.jpg")
