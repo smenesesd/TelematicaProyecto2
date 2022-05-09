@@ -16,5 +16,5 @@ OK200 = "HTTP/1.1 200 OK\n"
 
 Error400 = 'HTTP/1.1 400 Bad Request\n\n<html><body>Error 400: Bad Request</body></html>'
 Error404 = 'HTTP/1.1 404 Not Found\n\n<html><body>Error 404: File not found</body></html>'
-OK201 = 'HTTP/1.1 201 Created\nContent-Location: '
+OK201 = 'HTTP/1.1 201 Created\n\nContent-Location: '
 Error409 = 'HTTP/1.1 409 Conflict\n\n<html><body>Error 409: Conflit</body></html>'
