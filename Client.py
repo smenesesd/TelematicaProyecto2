@@ -25,8 +25,8 @@ def main():
     print('HELO, DATA, QUIT, GET, POST, HEAD, DELETE')
     command_to_send = input()
 
-    cmd = 'GET http://data.pr4e.otg/romeo.txt HTTP/1.0\r\n\r\n'.encode()
-    client_socket.send(cmd)
+    #cmd = 'GET http://data.pr4e.otg/romeo.txt HTTP/1.0\r\n\r\n'.encode()
+    #client_socket.send(cmd)
     
     while command_to_send != constants.QUIT:
         if command_to_send == '':
@@ -40,8 +40,9 @@ def main():
             print(data_received.decode(constants.ENCONDING_FORMAT))
             command_to_send = input()            
         else:        
+            print(command_to_send)
             client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
-            data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)        
+            data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)  
             print(data_received.decode(constants.ENCONDING_FORMAT))
             command_to_send = input()
     
