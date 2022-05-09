@@ -37,7 +37,7 @@ def get_object(address):                                #Metodo para retornar un
         header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'  #Preparamos el encabezado
     except Exception as e:
         print("Ocurrio un error")
-        header = constants.Error400
+        header = constants.Error404
         response = "".encode(constants.ENCONDING_FORMAT)                    #Encabezado para cuando no se encuentra el archivo
     final_response = header.encode(constants.ENCONDING_FORMAT)              #Se codifica el encabezado y la respuesta
     final_response += response
