@@ -44,8 +44,8 @@ def handler_client_connection(client_connection,client_address):
         
         if (command == constants.GET):
             print("Entre bro")
-            print(remote_command[1])
             response = get.get_object(remote_command[1])
+            print(response)
             client_connection.sendall(response)
         elif (command == constants.POST):
             response = '200 BYE\n'
@@ -61,7 +61,6 @@ def handler_client_connection(client_connection,client_address):
             response = 'HTTP/1.1 404 Not Found\n\n'.encode(constants.ENCONDING_FORMAT)
             header = '<html><body>Error 404: File not found</body></html>'.encode(constants.ENCONDING_FORMAT)
             response += header
-        client_connection.sendall(response)
     
     print(f'Now, client {client_address[0]}:{client_address[1]} is disconnected...')
     client_connection.close()
