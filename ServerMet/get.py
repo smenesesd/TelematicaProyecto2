@@ -1,4 +1,5 @@
 import os, sys
+import base64
 p = os.path.abspath('D:\TelematicaProyecto2')       #Para poder importar la clase  constatns
 sys.path.insert(1, p)
 import constants
@@ -7,16 +8,17 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent.absolute()         #Tomamos el directorio base para obtener los recursos
 
 
-def get_tipo(archivo):                              #Seleccion de tipo de archivo para encabezado
+def get_tipo(archivo, response):                              #Seleccion de tipo de archivo para encabezado
     if archivo.endswith('.jpg') or archivo.endswith('.png')or archivo.endswith('.jpeg'):
         tipo = "image/jpg"
+        response = base64.b64encode(response)
     elif archivo.endswith('.css'):
         tipo = "text/css"
     elif archivo.endswith('.pdf'):
         tipo = "application/pdf"
     else:
         tipo = "text/html"
-    return tipo
+    return tipo,response
 
 def get_object(address):                                #Metodo para retornar un recurso
     direction = address.split('?')[0]                   #Tomamos todo menos lo que hay despues del ?
@@ -33,7 +35,7 @@ def get_object(address):                                #Metodo para retornar un
         file = open(archivo, 'rb')                                          #Tratamos de leer el archivo
         response = file.read()
         file.close()
-        tipo_archivo = get_tipo(archivo)                                    #Buscamos que de que tipo es el archivo
+        tipo_archivo, response = get_tipo(archivo,response)                                    #Buscamos que de que tipo es el archivo
         header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'  #Preparamos el encabezado
     except Exception as e:
         print("Ocurrio un error")
