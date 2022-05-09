@@ -9,13 +9,17 @@ BASE_DIR = Path(__file__).parent.absolute()         #Tomamos el directorio base 
 
 
 def get_tipo(archivo, response):                              #Seleccion de tipo de archivo para encabezado
-    if archivo.endswith('.jpg') or archivo.endswith('.png')or archivo.endswith('.jpeg'):
-        tipo = "image/jpg"
+    if archivo.endswith('.jpg') or archivo.endswith('.jpeg'):
+        tipo = "image/jpeg"
+        response = base64.b64encode(response)
+    if archivo.endswith('.png'):
+        tipo = "image/png"
         response = base64.b64encode(response)
     elif archivo.endswith('.css'):
         tipo = "text/css"
     elif archivo.endswith('.pdf'):
         tipo = "application/pdf"
+        response = base64.b64encode(response)
     else:
         tipo = "text/html"
     return tipo,response
@@ -36,7 +40,7 @@ def get_object(address):                                #Metodo para retornar un
         response = file.read()
         file.close()
         tipo_archivo, response = get_tipo(archivo,response)                                    #Buscamos que de que tipo es el archivo
-        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'  #Preparamos el encabezado
+        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+' \n\n'  #Preparamos el encabezado
     except Exception as e:
         print("Ocurrio un error")
         header = constants.Error404
