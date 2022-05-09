@@ -1,14 +1,13 @@
-from dataclasses import replace
 import os, sys
-p = os.path.abspath('D:\TelematicaProyecto2')
+p = os.path.abspath('D:\TelematicaProyecto2')       #Para poder importar la clase  constatns
 sys.path.insert(1, p)
 import constants
 import re
 from pathlib import Path
-BASE_DIR = Path(__file__).parent.absolute()
+BASE_DIR = Path(__file__).parent.absolute()         #Tomamos el directorio base para obtener los recursos
 
 
-def get_tipo(archivo):  
+def get_tipo(archivo):                              #Seleccion de tipo de archivo para encabezado
     if archivo.endswith('.jpg'):
         tipo = "image/jpg"
     elif archivo.endswith('.css'):
@@ -19,31 +18,29 @@ def get_tipo(archivo):
         tipo = "text/html"
     return tipo
 
-def get_object(address):
-    direction = address.split('?')[0]
-    if direction == '/' or direction == '/home':
-        archivo = str(BASE_DIR /'index.html')
-        #archivo = replace('\.','/')
-        archivo = re.sub("[\\\]", "/", archivo)
+def get_object(address):                                #Metodo para retornar un recurso
+    direction = address.split('?')[0]                   #Tomamos todo menos lo que hay despues del ?
+    if direction == '/' or direction == '/home':        #En caso de que sea directorio base o /home
+        archivo = str(BASE_DIR /'index.html')           #Archivo va a ser directorio base + index.html
+        archivo = re.sub("[\\\]", "/", archivo)         #Se cambia los \ por /
         print(archivo)
     else:
-        direction = direction[1:]
-        archivo = str(BASE_DIR / direction)
-        print(archivo)
-        narchivo = re.sub("[\\\]", "/", archivo)
+        direction = direction[1:]                       #En caso de que no sea el index.html
+        archivo = str(BASE_DIR / direction)             #Directorio base + la direccion que nos mandan
+        narchivo = re.sub("[\\\]", "/", archivo)        #Se cambia el \ por el /
         print(narchivo)
     try:
-        file = open(archivo, 'rb')
+        file = open(archivo, 'rb')                                          #Tratamos de leer el archivo
         response = file.read()
         file.close()
-        tipo_archivo = get_tipo(archivo)
-        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'
+        tipo_archivo = get_tipo(archivo)                                    #Buscamos que de que tipo es el archivo
+        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'  #Preparamos el encabezado
     except Exception as e:
         print("Ocurrio un error")
         header = constants.Error400
-        response = "".encode(constants.ENCONDING_FORMAT)
-    final_response = header.encode(constants.ENCONDING_FORMAT)
+        response = "".encode(constants.ENCONDING_FORMAT)                    #Encabezado para cuando no se encuentra el archivo
+    final_response = header.encode(constants.ENCONDING_FORMAT)              #Se codifica el encabezado y la respuesta
     final_response += response
-    return final_response
+    return final_response                                                   #Se retorna la respuesta
 
 get_object("/Recursos/imagenes/equipo.jpg")
