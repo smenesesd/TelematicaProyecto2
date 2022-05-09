@@ -1,7 +1,12 @@
+from dataclasses import replace
 import os, sys
 p = os.path.abspath('D:\TelematicaProyecto2')
 sys.path.insert(1, p)
 import constants
+import re
+from pathlib import Path
+BASE_DIR = Path(__file__).parent.absolute()
+
 
 def get_tipo(archivo):  
     if archivo.endswith('.jpg'):
@@ -17,9 +22,16 @@ def get_tipo(archivo):
 def get_object(address):
     direction = address.split('?')[0]
     if direction == '/' or direction == '/home':
-        archivo = 'D:/TelematicaProyecto2/ServerMet/index.html'
+        archivo = str(BASE_DIR /'index.html')
+        #archivo = replace('\.','/')
+        archivo = re.sub("[\\\]", "/", archivo)
+        print(archivo)
     else:
-        archivo = 'D:/TelematicaProyecto2/ServerMet'+ direction
+        direction = direction[1:]
+        archivo = str(BASE_DIR / direction)
+        print(archivo)
+        narchivo = re.sub("[\\\]", "/", archivo)
+        print(narchivo)
     try:
         file = open(archivo, 'rb')
         response = file.read()
@@ -34,3 +46,4 @@ def get_object(address):
     final_response += response
     return final_response
 
+get_object("/Recursos/imagenes/equipo.jpg")
