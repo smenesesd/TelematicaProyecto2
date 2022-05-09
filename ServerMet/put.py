@@ -1,6 +1,5 @@
 import os, sys
 
-from matplotlib.cbook import report_memory
 p = os.path.abspath('D:\TelematicaProyecto2')       #Para poder importar la clase  constatns
 sys.path.insert(1, p)
 import constants
@@ -9,7 +8,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent.absolute()         #Tomamos el directorio base para obtener los recursos
 
 def get_direction(archivo):                              #Seleccion de tipo de archivo para encabezado
-    if archivo.endswith('.jpg'):
+    if archivo.endswith('.jpg') or archivo.endswith('.jpeg') or archivo.endswith('.png'):
         fichero = 'Recursos/imagenes/'+archivo
         tipo = str(BASE_DIR /fichero)  
     elif archivo.endswith('.css'):

@@ -43,7 +43,11 @@ def main():
             print(command_to_send)
             client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
             data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)  
-            print(data_received.decode(constants.ENCONDING_FORMAT))
+            datos = data_received.split(b'\n\n')                                    #division de la respuesta por encabezado y contenido
+            encabezado = datos[0].decode(constants.ENCONDING_FORMAT)                #decodifique y le di el valor de encabezado
+            contenido = datos[1]                                                    #dar valor de contenido
+            print(encabezado,'\n\n', contenido)
+            encabezado = encabezado.split()                                 #divide el encabezado por ' '
             command_to_send = input()
     
     client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))

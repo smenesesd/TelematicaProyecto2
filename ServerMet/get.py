@@ -11,15 +11,12 @@ BASE_DIR = Path(__file__).parent.absolute()         #Tomamos el directorio base 
 def get_tipo(archivo, response):                              #Seleccion de tipo de archivo para encabezado
     if archivo.endswith('.jpg') or archivo.endswith('.jpeg'):
         tipo = "image/jpeg"
-        response = base64.b64encode(response)
     if archivo.endswith('.png'):
         tipo = "image/png"
-        response = base64.b64encode(response)
     elif archivo.endswith('.css'):
         tipo = "text/css"
     elif archivo.endswith('.pdf'):
         tipo = "application/pdf"
-        response = base64.b64encode(response)
     else:
         tipo = "text/html"
     return tipo,response
@@ -29,24 +26,23 @@ def get_object(address):                                #Metodo para retornar un
     if direction == '/' or direction == '/home':        #En caso de que sea directorio base o /home
         archivo = str(BASE_DIR /'index.html')           #Archivo va a ser directorio base + index.html
         archivo = re.sub("[\\\]", "/", archivo)         #Se cambia los \ por /
-        print(archivo)
     else:
         direction = direction[1:]                       #En caso de que no sea el index.html
         archivo = str(BASE_DIR / direction)             #Directorio base + la direccion que nos mandan
         archivo = re.sub("[\\\]", "/", archivo)        #Se cambia el \ por el /
-        print(archivo)
     try:
         file = open(archivo, 'rb')                                          #Tratamos de leer el archivo
         response = file.read()
         file.close()
         tipo_archivo, response = get_tipo(archivo,response)                                    #Buscamos que de que tipo es el archivo
-        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+' \n\n'  #Preparamos el encabezado
+        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'  #Preparamos el encabezado
     except Exception as e:
         print("Ocurrio un error")
         header = constants.Error404
         response = "".encode(constants.ENCONDING_FORMAT)                    #Encabezado para cuando no se encuentra el archivo
     final_response = header.encode(constants.ENCONDING_FORMAT)              #Se codifica el encabezado y la respuesta
     final_response += response 
+    print(final_response)
     return final_response                                                   #Se retorna la respuesta
 
 get_object("/Recursos/imagenes/equipo.jpg")
