@@ -35,6 +35,7 @@ def put_object(header, remote_string):                              #Metodo para
                 cont += remote_string[i]+b'\n\n'                    #Volvemos a formar el contenido en caso de haberlo dividido
     else:
         cont = remote_string[1]
+    
     try:
         archivo = open(direccion, 'wb')                             #Abrimos el archvio, sea para actualizar o para crear
         archivo.write(cont)

@@ -35,7 +35,10 @@ def save_object(encabezado , contenido):
             if i == 0: 
                 continue
             else:
-                cont += contenido[i]+b'/n/n'
+                if i < len(contenido)-1:
+                    cont += contenido[i]+b'/n/n'
+                else:
+                    cont += contenido[i]
     else:
         cont = contenido[1]
     print(cont)  

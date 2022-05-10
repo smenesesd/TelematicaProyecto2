@@ -46,7 +46,7 @@ def main():
                 nombre = "/index.html"
             client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
             data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)  
-            datos = data_received.split(b'\n\n')
+            datos = data_received.split(b'\n\n',1)
             encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
             contenido = datos
             print(encabezado, '\n\n', contenido)
