@@ -22,7 +22,6 @@ def get_direction(archivo):                                                     
 
 
 def put_object(header, remote_string):                              #Metodo para realizar un put
-    tipo = ""
     nombre = str(header[1])                                         #Nombre del archivo con direccion
     nombre = nombre[1:]
     direccion = get_direction(nombre)

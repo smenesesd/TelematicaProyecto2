@@ -13,6 +13,7 @@ HEAD = 'HEAD'
 DELETE = 'DELETE'
 
 OK200 = "HTTP/1.1 200 OK\n"
+Okdelete = "\n<html><body><h3>Contenido eliminado con exito</h3></body></html>"
 
 Error400 = 'HTTP/1.1 400 Bad Request\n\n<html><body>Error 400: Bad Request</body></html>'
 Error404 = 'HTTP/1.1 404 Not Found\n\n<html><body>Error 404: File not found</body></html>'

@@ -41,6 +41,7 @@ def main():
         else:        
             print(command_to_send)
             nombre = command_to_send.split()
+            tipo = nombre[0]
             nombre = nombre[1]
             if nombre == "/":
                 nombre = "/index.html"
@@ -51,10 +52,8 @@ def main():
             contenido = datos
             print(encabezado, '\n\n', contenido)
             encabezado = encabezado.split()
-            if encabezado[1] =='200':
+            if encabezado[1] =='200' and tipo == constants.OK200:
                 save.save_object(nombre,contenido)
-                
-            
             command_to_send = input()
     
     client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
