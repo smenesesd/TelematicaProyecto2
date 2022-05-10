@@ -11,6 +11,7 @@
 import socket
 import constants
 import threading
+from Cliente import save
 
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)        #AF_INET define el tipo de direccion (ipv4), y modo TCP
 
@@ -25,8 +26,6 @@ def main():
     print('HELO, DATA, QUIT, GET, POST, HEAD, DELETE')
     command_to_send = input()
 
-    #cmd = 'GET http://data.pr4e.otg/romeo.txt HTTP/1.0\r\n\r\n'.encode()
-    #client_socket.send(cmd)
     
     while command_to_send != constants.QUIT:
         if command_to_send == '':
@@ -41,13 +40,21 @@ def main():
             command_to_send = input()            
         else:        
             print(command_to_send)
+            nombre = command_to_send.split()
+            nombre = nombre[1]
+            if nombre == "/":
+                nombre = "/index.html"
             client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
             data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)  
-            datos = data_received.split(b'\n\n')                                    #division de la respuesta por encabezado y contenido
-            encabezado = datos[0].decode(constants.ENCONDING_FORMAT)                #decodifique y le di el valor de encabezado
-            contenido = datos[1]                                                    #dar valor de contenido
-            print(encabezado,'\n\n', contenido)
-            encabezado = encabezado.split()                                 #divide el encabezado por ' '
+            datos = data_received.split(b'\n\n')
+            encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
+            contenido = datos
+            print(encabezado, '\n\n', contenido)
+            encabezado = encabezado.split()
+            if encabezado[1] =='200':
+                save.save_object(nombre,contenido)
+                
+            
             command_to_send = input()
     
     client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
