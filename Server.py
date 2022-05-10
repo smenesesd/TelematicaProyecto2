@@ -10,13 +10,14 @@ import socket
 import threading
 
 from numpy import empty
+from setuptools import Command
 import constants
-from ServerMet import get
+from ServerMet import get, put
 
 # Defining a socket object...
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)           #AF_INET define el tipo de direccion (ipv4), y modo TCP
 server_address = constants.IP_SERVER                                       #Define la direccion del servidor
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)     #Configuracion del socket
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)        #Configuracion del socket
 
 def main():
     print("***********************************")
@@ -32,23 +33,20 @@ def handler_client_connection(client_connection,client_address):
     is_connected = True
     while is_connected:
         data_recevived = client_connection.recv(constants.RECV_BUFFER_SIZE)             #Le los datos obetnidos de la peticion
-        remote_string = str(data_recevived.decode(constants.ENCONDING_FORMAT))          #Decodfica el mensaje
-        if remote_string == "":
+        if data_recevived == b"":                                               
             break
-        print(remote_string)                                                            #Impresion de mensaje de entrada
-        remote_command = remote_string.split()                                          #Division de la peticion entrante
-        #print(remote_command)
-        command = remote_command[0]
-        print (f'Data received from: {client_address[0]}:{client_address[1]}')
-        print(command)
-        
-        if (command == constants.GET):
-            print("Entre bro")
-            response = get.get_object(remote_command[1])
-            print(response)
+        print (f'Data received from: {client_address[0]}:{client_address[1]}')          #Imprimimos de donde nos llega la conexion
+        remote_string = data_recevived.split(b'\n\n')                                   #Division de la peticion entrante por contenido y header
+        header = str(remote_string[0].decode(constants.ENCONDING_FORMAT))               #Tomamos la posicion 1 que es el header y decodificamos                                                     
+        print(header)                                                                   #Imprimimos el comando entrante
+        header = header.split()                                                         #Dividimos el header por  ' '
+        command = header[0]                                                             #El comando va posicion 0 del header
+               
+        if (command == constants.GET):                                                  #En caso de que el comando sea GET
+            response = get.get_object(header[1])                                        #Enviamos el header[1] es la direccion del objecto que desea tener
             client_connection.sendall(response)
-        elif (command == constants.POST):
-            response = '200 BYE\n'
+        elif (command == constants.PUT):                                                #En caso de que el metodo sea PUT                  
+            response = put.put_object(header, remote_string)                         #Llamamos el metodo put con el header[1] y el contenido
             client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
             is_connected = False
         elif (command == constants.HEAD):

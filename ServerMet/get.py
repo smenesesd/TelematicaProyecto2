@@ -1,5 +1,4 @@
 import os, sys
-import base64
 p = os.path.abspath('D:\TelematicaProyecto2')       #Para poder importar la clase  constatns
 sys.path.insert(1, p)
 import constants
@@ -34,7 +33,7 @@ def get_object(address):                                #Metodo para retornar un
         file = open(archivo, 'rb')                                          #Tratamos de leer el archivo
         response = file.read()
         file.close()
-        tipo_archivo, response = get_tipo(archivo,response)                                    #Buscamos que de que tipo es el archivo
+        tipo_archivo, response = get_tipo(archivo,response)                 #Buscamos que de que tipo es el archivo
         header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'  #Preparamos el encabezado
     except Exception as e:
         print("Ocurrio un error")
