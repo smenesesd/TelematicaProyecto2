@@ -1,8 +1,4 @@
-import os, sys
 
-from matplotlib.cbook import report_memory
-p = os.path.abspath('D:\TelematicaProyecto2')       #Para poder importar la clase  constatns
-sys.path.insert(1, p)
 import constants
 import re
 from pathlib import Path
