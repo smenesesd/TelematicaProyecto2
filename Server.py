@@ -12,7 +12,7 @@ import threading
 from numpy import empty
 from setuptools import Command
 import constants
-from ServerMet import get, put
+from ServerMet import get, put, delete
 
 # Defining a socket object...
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)           #AF_INET define el tipo de direccion (ipv4), y modo TCP
@@ -53,7 +53,7 @@ def handler_client_connection(client_connection,client_address):
             response = "300 DRCV\n"
             client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
         elif (command == constants.DELETE):
-            response = "300 DRCV\n"
+            response = delete.delete_object(header)
             client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
         else:
             response = 'HTTP/1.1 404 Not Found\n\n'.encode(constants.ENCONDING_FORMAT)
