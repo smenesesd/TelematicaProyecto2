@@ -50,9 +50,9 @@ def main():
             datos = data_received.split(b'\n\n',1)
             encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
             contenido = datos
-            print(encabezado, '\n\n', contenido)
+            print(encabezado)
             encabezado = encabezado.split()
-            if encabezado[1] =='200' and tipo == constants.OK200:
+            if encabezado[1] =='200' and tipo == constants.GET:
                 save.save_object(nombre,contenido)
             command_to_send = input()
     

@@ -18,7 +18,6 @@ def get_direction(archivo):                              #Seleccion de tipo de a
     else:
         fichero = 'Recursos/documentos/'+archivo
         tipo = str(BASE_DIR /fichero) 
-        print(tipo)
         tipo = re.sub("[\\\]", "/", tipo) 
     return tipo
 
@@ -28,8 +27,6 @@ def save_object(encabezado , contenido):
     direccion = str(BASE_DIR/encabezado)
     direccion = re.sub("[\\\]", "/", direccion) 
     cont = b''
-    print(direccion)
-
     if len(contenido)>2:
         for i in range(len(contenido)):
             if i == 0: 
@@ -41,7 +38,6 @@ def save_object(encabezado , contenido):
                     cont += contenido[i]
     else:
         cont = contenido[1]
-    print(cont)  
     try:
         file = open(direccion, 'wb')
         file.write(cont)
