@@ -15,12 +15,13 @@ from Cliente import save
 
 lista_metodos_aceptados = [constants.GET, constants.HEAD, constants.DELETE, constants.PUT, constants.QUIT]
 exp_reg_direccion = re.compile('([/\w]+).(\w+)') 
+exp_reg_URL = re.compile('([\w]+)://([\w+\.]+)([/\w|-]+).(\w+)') 
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)        #AF_INET define el tipo de direccion (ipv4), y modo TCP
 
 def validador(encabezado):
     encabezado = encabezado.split()
     if encabezado[0] in lista_metodos_aceptados:
-        if exp_reg_direccion.match(encabezado[1]):
+        if exp_reg_direccion.match(encabezado[1]) or exp_reg_URL.match(encabezado[1]):
             if encabezado[2] == "HTTP/1.1":
                 return True
     return False
@@ -49,7 +50,8 @@ def main():
                 if nombre == "/":
                     nombre = "/index.html"
                 client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
-                data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)  
+                data_received = client_socket.recv(constants.RECV_BUFFER_SIZE) 
+                print(data_received) 
                 datos = data_received.split(b'\n\n',1)
                 encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
                 contenido = datos
