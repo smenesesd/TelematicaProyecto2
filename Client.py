@@ -7,60 +7,67 @@
 
 #Import libraries for networking communication...
 
-
+import re
 import socket
 import constants
 import threading
 from Cliente import save
 
+lista_metodos_aceptados = [constants.GET, constants.HEAD, constants.DELETE, constants.PUT, constants.QUIT]
+exp_reg_direccion = re.compile('([/\w]+).(\w+)') 
 client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)        #AF_INET define el tipo de direccion (ipv4), y modo TCP
+
+def validador(encabezado):
+    encabezado = encabezado.split()
+    if encabezado[0] in lista_metodos_aceptados:
+        if exp_reg_direccion.match(encabezado[1]):
+            if encabezado[2] == "HTTP/1.1":
+                return True
+    return False
+        
 
 def main():
     print('***********************************')
     print('Client is running...')
-    client_socket.connect(("127.0.0.1",constants.PORT))                 #Es donde el client se conectara al servidor
-    local_tuple = client_socket.getsockname()
-    print('Connected to the server from:', local_tuple)
-    print('Enter \"quit\" to exit')
-    print('Input commands:')
-    print('HELO, DATA, QUIT, GET, POST, HEAD, DELETE')
-    command_to_send = input()
-
-    
-    while command_to_send != constants.QUIT:
-        if command_to_send == '':
-            print('Please input a valid command...')
-            command_to_send = input()                    
-        elif (command_to_send == constants.DATA):
-            data_to_send = input('Input data to send: ') 
-            command_and_data_to_send = command_to_send + ' ' + data_to_send
-            client_socket.send(bytes(command_and_data_to_send,constants.ENCONDING_FORMAT))
-            data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)        
-            print(data_received.decode(constants.ENCONDING_FORMAT))
-            command_to_send = input()            
-        else:        
-            print(command_to_send)
-            nombre = command_to_send.split()
-            tipo = nombre[0]
-            nombre = nombre[1]
-            if nombre == "/":
-                nombre = "/index.html"
-            client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
-            data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)  
-            datos = data_received.split(b'\n\n',1)
-            encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
-            contenido = datos
-            print(encabezado)
-            encabezado = encabezado.split()
-            if encabezado[1] =='200' and tipo == constants.GET:
-                save.save_object(nombre,contenido)
+    direccion = input('Enter the IP Address: ')
+    port = int(input('Enter the Port: '))
+    try:
+        client_socket.connect((direccion,port))                 #Es donde el client se conectara al servidor
+        local_tuple = client_socket.getsockname()
+        print('Connected to the server from:', local_tuple)
+        print('Enter \"quit\" to exit')
+        print('Input commands:')
+        print('QUIT, GET, POST, HEAD, DELETE')
+        command_to_send = input()
+        while command_to_send != constants.QUIT :
+            print("estoy entrando")
+            if validador(command_to_send):       
+                print(command_to_send)
+                nombre = command_to_send.split()
+                tipo = nombre[0]
+                nombre = nombre[1]
+                if nombre == "/":
+                    nombre = "/index.html"
+                client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
+                data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)  
+                datos = data_received.split(b'\n\n',1)
+                encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
+                contenido = datos
+                print(encabezado)
+                encabezado = encabezado.split()
+                if encabezado[1] =='200' and tipo == constants.GET:
+                    save.save_object(nombre,contenido)
+            else:
+                print('Please enter a valid command')
             command_to_send = input()
-    
-    client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
-    data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)        
-    print(data_received.decode(constants.ENCONDING_FORMAT))
+    except:
+        client_socket.close()
+        print('Error, please try again...')
+        main()
     print('Closing connection...BYE BYE...')
-    client_socket.close()    
+    client_socket.close()
+    
+        
 
 if __name__ == '__main__':
     main()
