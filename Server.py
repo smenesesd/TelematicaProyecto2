@@ -36,7 +36,7 @@ def handler_client_connection(client_connection,client_address):
         if data_recevived == b"":                                               
             break
         print (f'Data received from: {client_address[0]}:{client_address[1]}')          #Imprimimos de donde nos llega la conexion
-        remote_string = data_recevived.split(b'\n\n')                                   #Division de la peticion entrante por contenido y header
+        remote_string = data_recevived.split(b'\r\n\r\n')                                   #Division de la peticion entrante por contenido y header
         header = str(remote_string[0].decode(constants.ENCONDING_FORMAT))               #Tomamos la posicion 1 que es el header y decodificamos                                                     
         print(header)                                                                   #Imprimimos el comando entrante
         header = header.split()                                                         #Dividimos el header por  ' '

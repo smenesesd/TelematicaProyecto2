@@ -43,22 +43,24 @@ def main():
         while command_to_send != constants.QUIT :
             print("estoy entrando")
             if validador(command_to_send):       
-                print(command_to_send)
                 nombre = command_to_send.split()
+                host_send = input("Host: ")
+                host_send  = "\nHost: "+host_send+"\r\n\r\n"
+                command_to_send +=host_send
                 tipo = nombre[0]
                 nombre = nombre[1]
                 if nombre == "/":
                     nombre = "/index.html"
                 client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
                 data_received = client_socket.recv(constants.RECV_BUFFER_SIZE) 
-                print(data_received) 
-                datos = data_received.split(b'\n\n',1)
+                datos = data_received.split(b'\r\n\r\n')
                 encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
-                contenido = datos
+                print(nombre)
                 print(encabezado)
+                print(datos)
                 encabezado = encabezado.split()
                 if encabezado[1] =='200' and tipo == constants.GET:
-                    save.save_object(nombre,contenido)
+                    save.save_object(nombre,datos)
             else:
                 print('Please enter a valid command')
             command_to_send = input()

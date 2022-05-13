@@ -29,7 +29,7 @@ def get_head(address):                                #Metodo para retornar un r
         archivo = re.sub("[\\\]", "/", archivo)        #Se cambia el \ por el /
     if os.path.exists(archivo):
         tipo_archivo = get_tipo(archivo)
-        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'
+        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\r\n\r\n'
     else:
         header = constants.Error404
     final_response = header.encode(constants.ENCONDING_FORMAT)              #Se codifica el encabezado y la respuesta

@@ -31,7 +31,7 @@ def put_object(header, remote_string):                              #Metodo para
             if i == 0:
                 continue
             else:
-                cont += remote_string[i]+b'\n\n'                    #Volvemos a formar el contenido en caso de haberlo dividido
+                cont += remote_string[i]+b'\r\n\r\n'                    #Volvemos a formar el contenido en caso de haberlo dividido
     else:
         cont = remote_string[1]
     

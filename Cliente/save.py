@@ -23,9 +23,10 @@ def get_direction(archivo):                              #Seleccion de tipo de a
 
 def save_object(encabezado , contenido):
     type = ""
-    encabezado = encabezado [1:]
-    direccion = str(BASE_DIR/encabezado)
-    direccion = re.sub("[\\\]", "/", direccion) 
+    direction = encabezado.split('?')[0]
+    direction = direction.split('/')
+    direccion = get_direction(direction[-1])
+    print(direccion)
     cont = b''
     if len(contenido)>2:
         for i in range(len(contenido)):
@@ -33,12 +34,13 @@ def save_object(encabezado , contenido):
                 continue
             else:
                 if i < len(contenido)-1:
-                    cont += contenido[i]+b'/n/n'
+                    cont += contenido[i]+b'\r\n\r\n'
                 else:
                     cont += contenido[i]
     else:
         cont = contenido[1]
     try:
+        print(cont)
         file = open(direccion, 'wb')
         file.write(cont)
         file.close()

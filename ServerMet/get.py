@@ -32,7 +32,7 @@ def get_object(address):                                #Metodo para retornar un
         response = file.read()
         file.close()
         tipo_archivo, response = get_tipo(archivo,response)                 #Buscamos que de que tipo es el archivo
-        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\n\n'  #Preparamos el encabezado
+        header = constants.OK200+'Content-Type: '+str(tipo_archivo)+'\r\n\r\n'  #Preparamos el encabezado
     except Exception as e:
         print("Ocurrio un error")
         header = constants.Error404
