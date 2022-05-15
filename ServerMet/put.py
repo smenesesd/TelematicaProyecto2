@@ -16,14 +16,13 @@ def get_direction(archivo):                                                     
     else:
         fichero = 'Recursos/documentos/'+archivo                                            #En caso de ser otro tipo de archivo
         tipo = str(BASE_DIR /fichero) 
-        print(tipo)
     tipo = re.sub("[\\\]", "/", tipo) 
     return tipo                                                                             #Retornamos la direccion donde va a ser almacneado el archivo
 
 
 def put_object(header, remote_string):                              #Metodo para realizar un put
-    nombre = str(header[1])                                         #Nombre del archivo con direccion
-    nombre = nombre[1:]
+    nombre = header[1].split("/")                                         #Nombre del archivo con direccion
+    nombre = nombre[-1]
     direccion = get_direction(nombre)
     cont = b''
     if len(remote_string)>2:                                        #En caso de que el contenido tenga mas de dos argumentos
@@ -36,10 +35,11 @@ def put_object(header, remote_string):                              #Metodo para
         cont = remote_string[1]
     
     try:
+        print(direccion)
         archivo = open(direccion, 'wb')                             #Abrimos el archvio, sea para actualizar o para crear
         archivo.write(cont)
         archivo.close()
-        header = constants.OK201+direccion                          #En caso de realizar el proceso con exito, devolvemos el mensaje de confirmacion
+        header = constants.OK201+direccion+constants.okcreated                         #En caso de realizar el proceso con exito, devolvemos el mensaje de confirmacion
     except:                 
         header = constants.Error409                                 #En caso de un error, enviamos un 409
     final_response = header.encode(constants.ENCONDING_FORMAT)  

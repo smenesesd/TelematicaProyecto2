@@ -31,35 +31,33 @@ def main():
 def handler_client_connection(client_connection,client_address):
     print(f'New incomming connection is coming from: {client_address[0]}:{client_address[1]}')
     is_connected = True
-    while is_connected:
-        data_recevived = client_connection.recv(constants.RECV_BUFFER_SIZE)             #Le los datos obetnidos de la peticion
-        if data_recevived == b"":                                               
-            break
-        print (f'Data received from: {client_address[0]}:{client_address[1]}')          #Imprimimos de donde nos llega la conexion
-        remote_string = data_recevived.split(b'\r\n\r\n')                               #Division de la peticion entrante por contenido y header
-        header = str(remote_string[0].decode(constants.ENCONDING_FORMAT))               #Tomamos la posicion 1 que es el header y decodificamos                                                     
-        print(header)                                                                   #Imprimimos el comando entrante
-        header = header.split()                                                         #Dividimos el header por  ' '
-        command = header[0]                                                             #El comando va posicion 0 del header
-               
-        if (command == constants.GET):                                                  #En caso de que el comando sea GET
-            response = get.get_object(header[1])                                        #Enviamos el header[1] es la direccion del objecto que desea tener
-            client_connection.sendall(response)
-        elif (command == constants.PUT):                                                #En caso de que el metodo sea PUT                  
-            response = put.put_object(header, remote_string)                            #Llamamos el metodo put con el header[1] y el contenido
-            client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
-            is_connected = False
-        elif (command == constants.HEAD):
-            response = head.get_head(header[1])
-            client_connection.sendall(response)
-        elif (command == constants.DELETE):
-            response = delete.delete_object(header)
-            client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
-        else:
-            response = 'HTTP/1.1 404 Not Found\n\n'.encode(constants.ENCONDING_FORMAT)
-            header = '<html><body>Error 404: File not found</body></html>'.encode(constants.ENCONDING_FORMAT)
-            response += header
     
+    data_recevived = client_connection.recv(constants.RECV_BUFFER_SIZE)             #Le los datos obetnidos de la peticion
+    print (f'Data received from: {client_address[0]}:{client_address[1]}')          #Imprimimos de donde nos llega la conexion
+    remote_string = data_recevived.split(b'\r\n\r\n')                               #Division de la peticion entrante por contenido y header
+    header = str(remote_string[0].decode(constants.ENCONDING_FORMAT))               #Tomamos la posicion 1 que es el header y decodificamos                                                     
+    print(header)                                                                   #Imprimimos el comando entrante
+    header = header.split()                                                         #Dividimos el header por  ' '
+    command = header[0]                                                             #El comando va posicion 0 del header
+               
+    if (command == constants.GET):                                                  #En caso de que el comando sea GET
+        response = get.get_object(header[1])                                        #Enviamos el header[1] es la direccion del objecto que desea tener
+        client_connection.sendall(response)
+    elif (command == constants.PUT):                                                #En caso de que el metodo sea PUT                  
+        response = put.put_object(header, remote_string)                            #Llamamos el metodo put con el header[1] y el contenido
+        client_connection.sendall(response)
+        is_connected = False
+    elif (command == constants.HEAD):
+        response = head.get_head(header[1])
+        client_connection.sendall(response)
+    elif (command == constants.DELETE):
+        response = delete.delete_object(header)
+        client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
+    else:
+        response = 'HTTP/1.1 404 Not Found\n\n'.encode(constants.ENCONDING_FORMAT)
+        header = '<html><body>Error 404: File not found</body></html>'.encode(constants.ENCONDING_FORMAT)
+        response += header
+        client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
     print(f'Now, client {client_address[0]}:{client_address[1]} is disconnected...')
     client_connection.close()
 
