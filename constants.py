@@ -1,4 +1,12 @@
-# Constants....
+# ********************************************************************************************
+    # Proyecto 2
+    # Course: ST0255 - Telemática
+    # MultiThread TCP-SocketServer
+    #Samuel Meneses Diaz
+    #David Gomez Correa
+# ********************************************************************************************
+
+# Import libraries for networking communication and concurrency...
 
 PORT = 9090
 ENCONDING_FORMAT = "utf-8"

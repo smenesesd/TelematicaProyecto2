@@ -15,16 +15,16 @@ def get_direction(direccion):
         archivo = re.sub("[\\\]", "/", archivo) 
     return archivo 
 
-def delete_object(header):
+def delete_object(header):                                  #Metodo para eliminar un archivo
     nombre = str(header[1])
-    direccion = get_direction(nombre)
+    direccion = get_direction(nombre)                       #Buscamos en que direccion se encuentra dicho archivo
     print(direccion)
     try:
-        os.remove(direccion)
-        header = str(constants.OK200+constants.Okdelete)
+        os.remove(direccion)                                #Tratamos de eliminar el archvio
+        header = str(constants.OK200+constants.Okdelete)    #Preparamos header de respuesta en caso de eliminarse correctamente
     except Exception as e:
-        header = str(constants.Error400)
+        header = str(constants.Error400)                    #Header en caso de haber ocurrido un error
     final_response = header
-    return final_response
+    return final_response                                   #Se retorna mensaje de respuesta
 
 

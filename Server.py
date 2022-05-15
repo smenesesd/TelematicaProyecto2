@@ -1,7 +1,9 @@
 # ********************************************************************************************
-    # Lab: Introduction to sockets
+    # Proyecto 2
     # Course: ST0255 - Telemática
     # MultiThread TCP-SocketServer
+    #Samuel Meneses Diaz
+    #David Gomez Correa
 # ********************************************************************************************
 
 # Import libraries for networking communication and concurrency...
@@ -37,7 +39,7 @@ def handler_client_connection(client_connection,client_address):
         print(f'\nNow, client {client_address[0]}:{client_address[1]} is disconnected...')
         client_connection.close()
         return
-    print (f'\nData received from: {client_address[0]}:{client_address[1]}')          #Imprimimos de donde nos llega la conexion
+    print (f'\nData received from: {client_address[0]}:{client_address[1]}')        #Imprimimos de donde nos llega la conexion
     remote_string = data_recevived.split(b'\r\n\r\n')                               #Division de la peticion entrante por contenido y header
     header = str(remote_string[0].decode(constants.ENCONDING_FORMAT))               #Tomamos la posicion 1 que es el header y decodificamos                                                     
     print("Request: \n")
@@ -50,18 +52,18 @@ def handler_client_connection(client_connection,client_address):
     elif (command == constants.PUT):                                                #En caso de que el metodo sea PUT                  
         response = put.put_object(header, remote_string)                            #Llamamos el metodo put con el header[1] y el contenido
         client_connection.sendall(response)
-    elif (command == constants.HEAD):
-        response = head.get_head(header[1])
+    elif (command == constants.HEAD):                                               #En caso de que sea metodo HEAD
+        response = head.get_head(header[1])                                         #Llamamos el metodo head con el header[1]
         client_connection.sendall(response)
-    elif (command == constants.DELETE):
+    elif (command == constants.DELETE):                                             #En caso de que sea el metodo DELETE
         response = delete.delete_object(header)
         client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
-    else:
+    else:                                                                                                       #En caso se de llegar un metodo no disponible
         response = 'HTTP/1.1 404 Not Found\n\n'.encode(constants.ENCONDING_FORMAT)
         header = '<html><body>Error 404: File not found</body></html>'.encode(constants.ENCONDING_FORMAT)
         response += header
-        client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
-    print(f'\nNow, client {client_address[0]}:{client_address[1]} is disconnected...')
+        client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))                                  #Cargamos mensaje de error y enviamos
+    print(f'\nNow, client {client_address[0]}:{client_address[1]} is disconnected...')                          #Desconectamos el cliente
     client_connection.close()
 
 #Function to start server process...
