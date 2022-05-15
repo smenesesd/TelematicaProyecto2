@@ -7,8 +7,12 @@
 
 #Import libraries for networking communication...
 
+from os import link
 import re
 import socket
+from urllib import response
+
+from bs4 import BeautifulSoup
 import constants
 import time
 from Cliente import save
@@ -79,7 +83,30 @@ def main():
     print('Closing connection...BYE BYE...')
     client_socket.close()
     
-        
+def parser(name_html, client, server):
+    links = []
+    with open('Client/' + name_html) as fp:
+        soup = BeautifulSoup(fp, "html.parser")
+        images = soup.findAll('img')
+        for img in images:
+            print(img['src'])
+            links.append(img['src'])
+    if len(links) > 0:
+        for i in links:
+            request = 'GET' + ' ' + '/' + i + ' ' + 'HTTP/1.1\r\nHost: ' + server + '\r\n\r\n'
+            client.send(request.encode())
+            response = client.recv(4000000).split(b"\r\n\r\n")
+            print(response[0].decode())
+            status_code = response[0].decode().split(' ')[1]
+            if(status_code == '200'):
+                file_receive = response[1]
+                file = open("./Client/" + i, 'wb')  
+                file.write(file_receive)
+                file.close()
+                print('File receive')
+            else:
+                print(response[1].decode())
+            print("************************")      
 
 if __name__ == '__main__':
     main()
