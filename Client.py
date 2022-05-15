@@ -67,21 +67,23 @@ def main(direccion, port):
                     data_received += data_received_add                    
                 datos = data_received.split(b'\r\n\r\n',1)
                 encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
+                encabezado_print = encabezado
                 print("\nResponse: \n")
                 encabezado = encabezado.split()
                 if encabezado[1] =='200' and tipo == constants.GET:
-                    print(encabezado)
+                    print(encabezado_print)
                     save.save_object(nombre,datos,direccion, port)
                 else:
                     try:
-                        print(encabezado)
+                        print(encabezado_print)
                         print('\r\n',datos[1].decode(constants.ENCONDING_FORMAT))
                     except:
-                        print(encabezado)
+                        print(encabezado_print)
                 client_socket.close() 
                 main(direccion, port)
+                return
             elif command_to_send == constants.QUIT:
-                continue
+                break
             else:
                 print('Please enter a valid command')
             #client_socket.connect((direccion,port, host_send))  
