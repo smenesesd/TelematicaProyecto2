@@ -30,7 +30,6 @@ def save_object(encabezado , contenido, address, port):
     direction = encabezado.split('?')[0]
     direction = direction.split('/')
     direccion = get_direction(direction[-1])
-    print(direccion)
     cont = b''
     if len(contenido)>2:
         for i in range(len(contenido)):
@@ -44,7 +43,6 @@ def save_object(encabezado , contenido, address, port):
     else:
         cont = contenido[1]
     try:
-        print(cont)
         file = open(direccion, 'wb')
         file.write(cont)
         file.close()
