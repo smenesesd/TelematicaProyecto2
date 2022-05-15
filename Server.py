@@ -36,7 +36,7 @@ def handler_client_connection(client_connection,client_address):
         if data_recevived == b"":                                               
             break
         print (f'Data received from: {client_address[0]}:{client_address[1]}')          #Imprimimos de donde nos llega la conexion
-        remote_string = data_recevived.split(b'\r\n\r\n')                                   #Division de la peticion entrante por contenido y header
+        remote_string = data_recevived.split(b'\r\n\r\n')                               #Division de la peticion entrante por contenido y header
         header = str(remote_string[0].decode(constants.ENCONDING_FORMAT))               #Tomamos la posicion 1 que es el header y decodificamos                                                     
         print(header)                                                                   #Imprimimos el comando entrante
         header = header.split()                                                         #Dividimos el header por  ' '
@@ -46,7 +46,7 @@ def handler_client_connection(client_connection,client_address):
             response = get.get_object(header[1])                                        #Enviamos el header[1] es la direccion del objecto que desea tener
             client_connection.sendall(response)
         elif (command == constants.PUT):                                                #En caso de que el metodo sea PUT                  
-            response = put.put_object(header, remote_string)                         #Llamamos el metodo put con el header[1] y el contenido
+            response = put.put_object(header, remote_string)                            #Llamamos el metodo put con el header[1] y el contenido
             client_connection.sendall(response.encode(constants.ENCONDING_FORMAT))
             is_connected = False
         elif (command == constants.HEAD):

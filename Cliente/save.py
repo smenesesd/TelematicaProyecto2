@@ -1,3 +1,4 @@
+from audioop import add
 import constants
 import re
 from pathlib import Path
@@ -6,7 +7,7 @@ BASE_DIR = Path(__file__).parent.absolute()         #Tomamos el directorio base 
 
 
 def get_direction(archivo):                              #Seleccion de tipo de archivo para encabezado
-    if archivo.endswith('.jpg'):
+    if archivo.endswith('.jpg') or archivo.endswith('.jpeg') or archivo.endswith('.png'):
         fichero = 'Recursos/imagenes/'+archivo
         tipo = str(BASE_DIR /fichero)  
     elif archivo.endswith('.css'):
@@ -21,7 +22,10 @@ def get_direction(archivo):                              #Seleccion de tipo de a
         tipo = re.sub("[\\\]", "/", tipo) 
     return tipo
 
-def save_object(encabezado , contenido):
+def html_parser(contenido, address, port):
+    return
+
+def save_object(encabezado , contenido, address, port):
     type = ""
     direction = encabezado.split('?')[0]
     direction = direction.split('/')
@@ -34,7 +38,7 @@ def save_object(encabezado , contenido):
                 continue
             else:
                 if i < len(contenido)-1:
-                    cont += contenido[i]+b'\r\n\r\n'
+                    cont += contenido[i]
                 else:
                     cont += contenido[i]
     else:
@@ -44,5 +48,7 @@ def save_object(encabezado , contenido):
         file = open(direccion, 'wb')
         file.write(cont)
         file.close()
+        #if direccion.endswith(".html"):
+            #html_parser(cont, address, port)
     except Exception as e:
         print("Ocurrio un error")

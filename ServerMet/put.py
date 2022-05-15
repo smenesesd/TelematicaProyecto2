@@ -53,7 +53,6 @@ img = imagen.read()
 imagen.close()
 img = ['PUT /nuevo.pg',img]
 
-lista = ['PUT','/verstapen.html', 'HTTP/1.1\n', 'Host:', 'ejemplo.com', 'Content-type:', 'image/png\n',
-'\n']
+lista = ['PUT','/verstapen.html', 'HTTP/1.1\n', 'Host:', 'ejemplo.com', 'Content-type:', 'image/png\n','\n']
 
 put_object(lista,img)

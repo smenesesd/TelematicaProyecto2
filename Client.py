@@ -10,7 +10,7 @@
 import re
 import socket
 import constants
-import threading
+import time
 from Cliente import save
 
 lista_metodos_aceptados = [constants.GET, constants.HEAD, constants.DELETE, constants.PUT, constants.QUIT]
@@ -36,12 +36,12 @@ def main():
         client_socket.connect((direccion,port))                 #Es donde el client se conectara al servidor
         local_tuple = client_socket.getsockname()
         print('Connected to the server from:', local_tuple)
-        print('Enter \"quit\" to exit')
-        print('Input commands:')
-        print('QUIT, GET, POST, HEAD, DELETE')
-        command_to_send = input()
+        command_to_send = ""
         while command_to_send != constants.QUIT :
-            print("estoy entrando")
+            print('\nEnter \"quit\" to exit')
+            print('Input commands:')
+            print('QUIT, GET, POST, HEAD, DELETE\n')
+            command_to_send = input()
             if validador(command_to_send):       
                 nombre = command_to_send.split()
                 host_send = input("Host: ")
@@ -52,20 +52,28 @@ def main():
                 if nombre == "/":
                     nombre = "/index.html"
                 client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))
-                data_received = client_socket.recv(constants.RECV_BUFFER_SIZE) 
-                datos = data_received.split(b'\r\n\r\n')
+                data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)
+                time.sleep(0.2)
+                data_received_add = client_socket.recv(constants.RECV_BUFFER_SIZE)
+                if data_received_add != b'':
+                    data_received += data_received_add                    
+                datos = data_received.split(b'\r\n\r\n',1)
                 encabezado = str(datos[0].decode(constants.ENCONDING_FORMAT))
-                print(nombre)
+                print("\nResponse: \n")
                 print(encabezado)
-                print(datos)
                 encabezado = encabezado.split()
                 if encabezado[1] =='200' and tipo == constants.GET:
-                    save.save_object(nombre,datos)
+                    save.save_object(nombre,datos,direccion, port)
+                else:
+                    print('\r\n',datos[1].decode(constants.ENCONDING_FORMAT))
             else:
                 print('Please enter a valid command')
-            command_to_send = input()
-    except:
+            #client_socket.close() 
+            #client_socket.connect((direccion,port))  
+
+    except Exception as e:
         client_socket.close()
+        print(e)
         print('Error, please try again...')
         main()
     print('Closing connection...BYE BYE...')
