@@ -50,7 +50,6 @@ def handler_client_connection(client_connection,client_address):
     elif (command == constants.PUT):                                                #En caso de que el metodo sea PUT                  
         response = put.put_object(header, remote_string)                            #Llamamos el metodo put con el header[1] y el contenido
         client_connection.sendall(response)
-        is_connected = False
     elif (command == constants.HEAD):
         response = head.get_head(header[1])
         client_connection.sendall(response)

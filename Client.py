@@ -7,14 +7,10 @@
 
 #Import libraries for networking communication...
 
-from os import link
+
 import re
 import socket
-from urllib import response
-
-from bs4 import BeautifulSoup
 import constants
-import time
 from Cliente import save, put_client
 
 
@@ -29,8 +25,8 @@ def validador(encabezado):
         if exp_reg_direccion.match(encabezado[1]) or exp_reg_URL.match(encabezado[1]):
             if encabezado[2] == "HTTP/1.1":
                 return True
-    elif encabezado[0]=='/':
-        return True
+        elif encabezado[1]=='/':
+            return True
     return False
         
 
@@ -48,8 +44,8 @@ def main(direccion, port):
             command_to_send = input()
             if validador(command_to_send) and command_to_send != constants.QUIT:       
                 nombre = command_to_send.split()
-                host_send = input("Host: ")
-                host_send  = "\nHost: "+host_send
+                host_send1 = input("Host: ")
+                host_send  = "\nHost: "+host_send1
                 command_to_send +=host_send
                 tipo = nombre[0]
                 nombre = nombre[1]
@@ -57,7 +53,6 @@ def main(direccion, port):
                     contenido = put_client.get_object(nombre)
                     header = command_to_send.encode(constants.ENCONDING_FORMAT)
                     header += contenido
-                    print(header)
                     client_socket.send(header)
                 else:
                     command_to_send += "\r\n\r\n"
@@ -76,7 +71,7 @@ def main(direccion, port):
                 encabezado = encabezado.split()
                 if encabezado[1] =='200' and tipo == constants.GET:
                     print(encabezado_print)
-                    save.save_object(nombre,datos,direccion, port)
+                    save.save_object(nombre,datos,direccion, port, host_send1)
                 else:
                     try:
                         print(encabezado_print)
@@ -98,32 +93,7 @@ def main(direccion, port):
         print('Error, please try again...')
 
     print('Closing connection...BYE BYE...')
-    client_socket.close()
-    
-def parser(name_html, client, server):
-    links = []
-    with open('Client/' + name_html) as fp:
-        soup = BeautifulSoup(fp, "html.parser")
-        images = soup.findAll('img')
-        for img in images:
-            print(img['src'])
-            links.append(img['src'])
-    if len(links) > 0:
-        for i in links:
-            request = 'GET' + ' ' + '/' + i + ' ' + 'HTTP/1.1\r\nHost: ' + server + '\r\n\r\n'
-            client.send(request.encode())
-            response = client.recv(4000000).split(b"\r\n\r\n")
-            print(response[0].decode())
-            status_code = response[0].decode().split(' ')[1]
-            if(status_code == '200'):
-                file_receive = response[1]
-                file = open("./Client/" + i, 'wb')  
-                file.write(file_receive)
-                file.close()
-                print('File receive')
-            else:
-                print(response[1].decode())
-            print("************************")      
+    client_socket.close()     
 
 if __name__ == '__main__':
     print('***********************************')
