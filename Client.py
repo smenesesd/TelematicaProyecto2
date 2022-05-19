@@ -58,7 +58,7 @@ def main(direccion, port):
                 else:                                                                       #En caso de ser cualquiera de los demas metodos
                     command_to_send += "\r\n\r\n"                                           #Añadimos un doble salto de linea 
                     client_socket.send(bytes(command_to_send,constants.ENCONDING_FORMAT))   #Se codifica el mensaje y se envia
-                data_received = client_socket.recv(constants.RECV_BUFFER_SIZE)          #Recibimos la informacion que llega del servidor
+                data_received = client_socket.recv(10000000)          #Recibimos la informacion que llega del servidor
                 #time.sleep(0.2)
                 while True:                                                             #En caso de que el mensaje este partido, se realiza este bucle para anexar los datos restantes
                     data_received_add = client_socket.recv(constants.RECV_BUFFER_SIZE)
