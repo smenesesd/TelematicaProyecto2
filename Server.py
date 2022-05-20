@@ -11,8 +11,7 @@
 import socket
 import threading
 
-from numpy import empty
-from setuptools import Command
+
 import constants
 from ServerMet import get, put, delete, head
 
